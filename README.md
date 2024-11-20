@@ -29,52 +29,51 @@ pip install transformers torch
 - Run the code to generate and compare answers. 
 
 **Code:**
+```
+from transformers import pipeline
 
-from transformers import pipeline ![](Aspose.Words.8fae4571-5baf-4450-af56-6c7d0e93356e.001.png)
+# Load GPT-Neo and GPT-2 models
+generator_neo = pipeline('text-generation', model='EleutherAI/gpt-neo-1.3B')
+generator_gpt2 = pipeline('text-generation', model='gpt2')
 
-- Load GPT-Neo and GPT-2 models 
+# Function to get answer from GPT-Neo
+def get_gpt_neo_answer(question):
+    generated_text = generator_neo(question, max_length=100, num_return_sequences=1)
+    return generated_text[0]['generated_text']
 
-generator\_neo = pipeline('text-generation', model='EleutherAI/gpt-neo-1.3B') ![](Aspose.Words.8fae4571-5baf-4450-af56-6c7d0e93356e.002.png)generator\_gpt2 = pipeline('text-generation', model='gpt2') 
+# Function to get answer from GPT-2
+def get_gpt2_answer(question):
+    generated_text = generator_gpt2(question, max_length=100, num_return_sequences=1)
+    return generated_text[0]['generated_text']
 
-- Function to get answer from GPT-Neo 
+# Function to compare answers from both models
+def compare_answers(question):
+    answer_gpt_neo = get_gpt_neo_answer(question)
+    answer_gpt2 = get_gpt2_answer(question)
+    
+    print("GPT-Neo Answer:", answer_gpt_neo)
+    print("GPT-2 Answer:", answer_gpt2)
+    
+    if answer_gpt_neo == answer_gpt2:
+        summary = "Both models provided the same answer."
+    else:
+        summary = "The answers are different."
+    
+    print("Summary:", summary)
+    
+    return {
+        "question": question,
+        "gpt_neo_answer": answer_gpt_neo,
+        "gpt2_answer": answer_gpt2,
+        "summary": summary
+    }
 
-def get\_gpt\_neo\_answer(question): 
+# Run the comparison with a sample question
+question = "What happens after humans die?"
+result = compare_answers(question)
+print("Comparison Result:", result)
 
-`    `generated\_text = generator\_neo(question, max\_length=100, num\_return\_sequences=1) 
-
-`    `return generated\_text[0]['generated\_text'] 
-
-- Function to get answer from GPT-2 def get\_gpt2\_answer(question): 
-
-  `    `generated\_text = generator\_gpt2(question, max\_length=100, ![](Aspose.Words.8fae4571-5baf-4450-af56-6c7d0e93356e.003.png)num\_return\_sequences=1) 
-
-  `    `return generated\_text[0]['generated\_text'] 
-
-- Function to compare answers from both models def compare\_answers(question): 
-
-  `    `answer\_gpt\_neo = get\_gpt\_neo\_answer(question)     answer\_gpt2 = get\_gpt2\_answer(question) 
-
-print("GPT-Neo Answer:", answer\_gpt\_neo) print("GPT-2 Answer:", answer\_gpt2) 
-
-`    `if answer\_gpt\_neo == answer\_gpt2: 
-
-`        `summary = "Both models provided the same answer."     else: 
-
-`        `summary = "The answers are different." 
-
-print("Summary:", summary) 
-
-`    `return { 
-
-`        `"question": question, 
-
-`        `"gpt\_neo\_answer": answer\_gpt\_neo,         "gpt2\_answer": answer\_gpt2, 
-
-`        `"summary": summary 
-
-`    `} 
-
-- Run the comparison with a sample question question = "What happens after humans die?" result = compare\_answers(question) print("Comparison Result:", result) 
+```
 
   **Result: Output:** 
 
